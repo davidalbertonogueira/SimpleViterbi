@@ -1,4 +1,4 @@
-'''Implementation example of the Viterbi algorithm (Hidden Markov Model) 
+﻿'''Implementation example of the Viterbi algorithm (Hidden Markov Model) 
 DISCLAIMER: This is a simple and easy-to-go implementation of 
 this algorithm in Python. 
 Its intent is not to be efficient, but educational and easy to understand. 
@@ -15,13 +15,13 @@ def printdptable(V):
         print "%.5s: " % y + " ".join("%.7s" % ("%f" % V[t][states.index(y)]) \
         for t in range(0, len(observations)) )
         
-def viterbi_emit_trans(obs, states, start_p, trans_p, emit_p):
+def viterbi_emiss_trans(obs, states, start_p, trans_p, emiss_p):
     deltas = numpy.zeros( shape=( len(observations), len(states) ) ); 
     path = {}
     
     # Initialize base cases (t == 0)
     for y in states:
-        deltas[0][states.index(y)] = start_p[y] * emit_p[y][obs[0]]
+        deltas[0][states.index(y)] = start_p[y] * emiss_p[y][obs[0]]
         path[y] = [y]
     
     # Run Viterbi for t > 0
@@ -32,13 +32,13 @@ def viterbi_emit_trans(obs, states, start_p, trans_p, emit_p):
             #best_state = -1;
             #for y0 in states:
             #    curr_value = \
-            #    deltas[t-1][states.index(y0)] * trans_p[y0][y] * emit_p[y][obs[t]]
+            #    deltas[t-1][states.index(y0)] * trans_p[y0][y] * emiss_p[y][obs[t]]
             #    if curr_value > best_value or best_state < 0:
             #        best_value = curr_value
             #        best_state = y0
             #pythonic way
             (best_value, best_state) = \
-            max((deltas[t-1][states.index(y0)] * trans_p[y0][y] * emit_p[y][obs[t]], y0) \
+            max((deltas[t-1][states.index(y0)] * trans_p[y0][y] * emiss_p[y][obs[t]], y0) \
             for y0 in states)
             
             deltas[t][states.index(y)] = best_value
@@ -147,7 +147,7 @@ for t in range(0, len(observations)-1):
 # ***** CREATION OF NODE AND EDGE SCORE MATRICES ***** #
 
 def example_with_emission_transition_matrices():
-    return viterbi_emit_trans( observations,
+    return viterbi_emiss_trans( observations,
                                states,
                                start_probability,
                                transition_probability,
@@ -159,9 +159,11 @@ def example2_with_node_edge_matrices_withoutlog():
                                node_scores, 
                                edge_scores,
                                0)
-#Example with log values. 
-#This is the recommend method as it does not suffer from underflow 
-#as the previous method (multiplication of probabilities 0<p(x)<1 tends to zero).                                                          
+
+#Example using the log of the probabilities 
+#(rather than the probabilities themselves). 
+#This is the recommend method as it does not lead to underflow, 
+#as it can occur in the other case.                                                         
 def example2_with_node_edge_matrices_withlog():
     return viterbi_node_edge(  observations,
                                states, 
