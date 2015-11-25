@@ -16,6 +16,7 @@ def printdptable(V):
         for t in range(0, len(observations)) )
         
 def viterbi_emiss_trans(obs, states, start_p, trans_p, emiss_p):
+    #probability matrix of the state sequence
     deltas = numpy.zeros( shape=( len(observations), len(states) ) ); 
     path = {}
     
@@ -54,6 +55,7 @@ def viterbi_emiss_trans(obs, states, start_p, trans_p, emiss_p):
     return (best_value, path[best_state])
 
 def viterbi_node_edge(obs, states, node_scores, edge_scores, log=0):
+    #probability matrix of the state sequence
     deltas = numpy.zeros( shape=( len(observations), len(states) ) ); 
     backtrack = numpy.zeros( shape=( len(observations), len(states) ) ); 
     path = {}
@@ -128,6 +130,12 @@ emission_probability = {
 # ***** PROBLEM EXAMPLE VARIABLES ***** #
  
 # ***** CREATION OF NODE AND EDGE SCORE MATRICES ***** #
+# Useful, e.g., to compute the Viterbi path of a sequence model.
+# Note: the initial probability is incorporated in the node scores.
+# 1) node_scores is a matrix whose size is the length of the sequence 
+# (aka, the observations) with the scores for each label (aka, the states).
+# 2) edge_scores is a matrix whose size is the length of the sequence minus one, 
+# where each entry indexes a 2D array of scores for each pair of labels.
 node_scores = numpy.zeros( shape=( len(observations), len(states) ) );  
 # Initialize base cases (t == 0)
 for y in states:
@@ -146,14 +154,14 @@ for t in range(0, len(observations)-1):
             transition_probability[states[prev_state]][states[next_state]]
 # ***** CREATION OF NODE AND EDGE SCORE MATRICES ***** #
 
-def example_with_emission_transition_matrices():
+def viterbi_with_emission_transition_matrices():
     return viterbi_emiss_trans( observations,
                                states,
                                start_probability,
                                transition_probability,
                                emission_probability)
                                
-def example2_with_node_edge_matrices_withoutlog():
+def viterbi_with_node_edge_matrices_withoutlog():
     return viterbi_node_edge(  observations,
                                states, 
                                node_scores, 
@@ -164,7 +172,7 @@ def example2_with_node_edge_matrices_withoutlog():
 #(rather than the probabilities themselves). 
 #This is the recommend method as it does not lead to underflow, 
 #as it can occur in the other case.                                                         
-def example2_with_node_edge_matrices_withlog():
+def viterbi_with_node_edge_matrices_withlog():
     return viterbi_node_edge(  observations,
                                states, 
                                numpy.log(node_scores), 
@@ -172,6 +180,6 @@ def example2_with_node_edge_matrices_withlog():
                                1)
                                
                  
-print(example_with_emission_transition_matrices())
-print(example2_with_node_edge_matrices_withoutlog())
-print(example2_with_node_edge_matrices_withlog())
+print(viterbi_with_emission_transition_matrices())
+print(viterbi_with_node_edge_matrices_withoutlog())
+print(viterbi_with_node_edge_matrices_withlog())
