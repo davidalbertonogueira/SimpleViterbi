@@ -1,5 +1,6 @@
 # SimpleViterbi
 Implementation example of the Viterbi algorithm (Hidden Markov Model) 
+
 DISCLAIMER: This is a simple and easy-to-go implementation of 
 this algorithm in Python. 
 Its intent is not to be efficient, but educational and easy to understand. 
